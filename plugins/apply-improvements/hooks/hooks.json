@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v python3 >/dev/null 2>&1 && python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session-improve-capture.py\" || exit 0",
+            "commandWindows": "if (Get-Command python -ErrorAction SilentlyContinue) { python \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\session-improve-capture.py\" }",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v python3 >/dev/null 2>&1 && python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/session-improve-reminder.py\" || exit 0",
+            "commandWindows": "if (Get-Command python -ErrorAction SilentlyContinue) { python \"$env:CLAUDE_PLUGIN_ROOT\\hooks\\session-improve-reminder.py\" }",
+            "timeout": 5,
+            "statusMessage": "Checking pending session self-improvement reviews..."
+          }
+        ]
+      }
+    ]
+  }
+}

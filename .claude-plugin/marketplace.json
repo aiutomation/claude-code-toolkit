@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "claude-code-toolkit",
+  "description": "Session modes and self-improvement loops for Claude Code, pulled from a daily-driver config.",
+  "owner": {
+    "name": "aiutomation",
+    "url": "https://github.com/aiutomation"
+  },
+  "plugins": [
+    {
+      "name": "challenger",
+      "description": "A skeptical staff-engineer session mode that pushes back on your decisions AND the existing code — but only when warranted. Levels: lite, full, ultra.",
+      "source": "./plugins/challenger",
+      "category": "productivity"
+    },
+    {
+      "name": "apply-improvements",
+      "description": "Capture-now/review-next self-improvement loop: a SessionEnd hook queues what happened, a skill later audits it and applies only the config edits you approve.",
+      "source": "./plugins/apply-improvements",
+      "category": "productivity"
+    }
+  ]
+}

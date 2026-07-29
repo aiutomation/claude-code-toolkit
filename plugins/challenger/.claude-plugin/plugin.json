@@ -1,0 +1,12 @@
+{
+  "name": "challenger",
+  "version": "1.0.0",
+  "description": "Conservative-skeptic session mode. Challenges your decisions and the existing codebase when warranted, stays silent when the code is fine. Persists across /clear and restarts. Levels: lite, full, ultra.",
+  "author": {
+    "name": "aiutomation",
+    "url": "https://github.com/aiutomation"
+  },
+  "homepage": "https://github.com/aiutomation/claude-code-toolkit",
+  "repository": "https://github.com/aiutomation/claude-code-toolkit",
+  "license": "MIT"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "apply-improvements",
+  "version": "1.0.0",
+  "description": "Self-improvement loop for your Claude Code config. A SessionEnd hook captures what happened, a SessionStart hook nudges when captures back up, and a skill audits them and applies only the edits you approve.",
+  "author": {
+    "name": "aiutomation",
+    "url": "https://github.com/aiutomation"
+  },
+  "homepage": "https://github.com/aiutomation/claude-code-toolkit",
+  "repository": "https://github.com/aiutomation/claude-code-toolkit",
+  "license": "MIT"
+}

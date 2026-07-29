@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@@TITLE@@</title>
+<!-- Prism.js VSCode-style ("Dark+") syntax highlighting theme -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-vsc-dark-plus.min.css">
+<style>
+  :root{
+    --io:#fff4c2; --io-b:#b8860b;
+    --process:#e7f0ff; --process-b:#3b6fb6;
+    --decision:#ffe1e1; --decision-b:#c0392b;
+    --data:#e3f7ea; --data-b:#2e7d32;
+    --ink:#1f2430; --muted:#6b7280; --line:#e5e7eb; --bg:#f6f7fb;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.5}
+  a{color:#2563eb;text-decoration:none}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+
+  /* ---- layout: fixed sidebar + scrolling main ---- */
+  .layout{display:flex;align-items:flex-start}
+  aside{position:sticky;top:0;height:100vh;width:250px;flex:0 0 250px;overflow:auto;
+        background:#fff;border-right:1px solid var(--line);padding:16px 12px}
+  aside h1{font-size:15px;margin:4px 6px 2px}
+  aside .meta{font-size:11px;color:var(--muted);margin:0 6px 12px}
+  .nav-group{margin:10px 0}
+  .nav-fam{display:block;font-size:11px;font-weight:700;text-transform:uppercase;
+           letter-spacing:.04em;color:var(--fc);border-left:3px solid var(--fc);
+           padding-left:6px;margin-bottom:4px}
+  aside a{display:block;font-size:13px;color:#374151;padding:3px 6px 3px 12px;border-radius:6px}
+  aside a:hover{background:var(--bg)}
+  main{flex:1;min-width:0;padding:24px 28px 80px;max-width:1000px;margin:0 auto}
+  /* collapsed sidebar: hide it, let main use the full width (remembered in localStorage) */
+  body.nav-hidden aside{display:none}
+
+  /* ---- top bar ---- */
+  .topbar{position:sticky;top:0;z-index:5;background:rgba(246,247,251,.92);
+          backdrop-filter:blur(6px);padding:10px 0 14px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+  .topbar h2{margin:0 0 2px;font-size:22px}
+  .topbar p{margin:0;color:var(--muted);font-size:13px}
+  .controls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .controls input{flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--line);
+                  border-radius:8px;font-size:14px}
+  .controls button{padding:8px 12px;border:1px solid var(--line);background:#fff;border-radius:8px;
+                   cursor:pointer;font-size:13px}
+  .controls button:hover{background:#fff;border-color:#9ca3af}
+
+  /* ---- legend ---- */
+  .legend{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0}
+  .legend h3{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .legend .row{display:flex;flex-wrap:wrap;gap:14px}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:13px}
+  .swatch{width:26px;height:18px;border-radius:4px;border:2px solid}
+  .swatch.io{background:var(--io);border-color:var(--io-b);transform:skewX(-18deg)}
+  .swatch.process{background:var(--process);border-color:var(--process-b)}
+  .swatch.decision{background:var(--decision);border-color:var(--decision-b);border-radius:3px;transform:rotate(45deg) scale(.8)}
+  .swatch.data{background:var(--data);border-color:var(--data-b);border-radius:10px}
+
+  /* ---- overview ---- */
+  .overview{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0 26px}
+  .overview h3{margin:0 0 4px;font-size:16px}
+  .overview p.hint{margin:0 0 8px;color:var(--muted);font-size:13px}
+
+  /* ---- cards ---- */
+  .card{background:#fff;border:1px solid var(--line);border-left:6px solid var(--fc);
+        border-radius:12px;padding:18px 20px;margin:0 0 22px;scroll-margin-top:120px;
+        box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  .chead{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+  .badge{color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .num{font-size:12px;color:var(--muted);font-weight:700}
+  .chead h2{font-size:19px;margin:0;flex:1 1 100%}
+  .hmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .fname{font-size:12px;background:var(--bg);padding:2px 7px;border-radius:6px;color:#374151}
+  .fw{font-size:12px;color:var(--muted);font-weight:600}
+  .one{font-size:15px;margin:10px 0 6px}
+  .wwh{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .wwh th{width:58px;text-align:left;vertical-align:top;padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;white-space:nowrap}
+  .wwh td{padding:8px 11px;vertical-align:top;color:#374151;background:#fbfbfe;border-bottom:1px solid var(--line)}
+  .wwh tr:last-child td{border-bottom:0}
+  .wwh tr.what th{background:#3b6fb6}.wwh tr.why th{background:#b8860b}.wwh tr.how th{background:#2e7d32}
+  .analogy{font-size:13.5px;color:#4b5563;background:#fbfbfe;border:1px dashed var(--line);
+           border-radius:8px;padding:8px 11px;margin:8px 0}
+  .analogy b{color:var(--fc);margin-right:4px}
+  .iogrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+  .io{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13.5px}
+  .io h4{margin:0 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+  .io.in h4{color:#b8860b}.io.out h4{color:#2e7d32}
+  .io p{margin:0;color:#374151}
+  .pressgo h4,.mech h4{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:14px 0 4px}
+  .pressgo pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:11px 13px;overflow:auto;margin:0;font-size:13px}
+  .mech p{margin:0;font-size:13.5px;color:#374151}
+  .diagram{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin:14px 0;overflow:auto}
+  .mermaid{display:flex;justify-content:center}
+  .stepbox{margin-top:6px}
+  .stepbox summary,.codebox summary{cursor:pointer;font-size:13px;font-weight:600;color:#374151;padding:6px 0}
+  .codebox{margin-top:6px}
+  /* match VSCode "Dark+" background; Prism's theme colours the tokens on top */
+  .codebox pre.codeblock{background:#1e1e1e;color:#d4d4d4;border:1px solid #2d2d2d;border-radius:8px;
+        padding:13px 15px;overflow:auto;margin:6px 0 0;font-size:12.5px;line-height:1.55;max-height:520px;
+        text-shadow:none}
+  .codebox pre.codeblock code{white-space:pre;text-shadow:none;background:none}
+  /* small VSCode-toned button that throws the code block into native fullscreen (Esc exits) */
+  .fs-btn{margin:6px 0 0;padding:4px 11px;border:1px solid #2d2d2d;background:#252526;color:#d4d4d4;
+        border-radius:6px;cursor:pointer;font-size:12px}
+  .fs-btn:hover{background:#2d2d30;border-color:#3d3d40}
+  .codebox pre.codeblock:fullscreen{max-height:none;width:100vw;height:100vh;
+        font-size:14px;line-height:1.6;padding:26px 30px;margin:0}
+  .steptbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  .steptbl th,.steptbl td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+  .steptbl th{background:var(--bg);font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  .steptbl td.st{font-weight:600;white-space:nowrap}
+  .steptbl td.st.io{color:var(--io-b)} .steptbl td.st.process{color:var(--process-b)}
+  .steptbl td.st.decision{color:var(--decision-b)} .steptbl td.st.data{color:var(--data-b)}
+  .notes{margin-top:14px}
+  .notes h4{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:0 0 5px}
+  .note{min-height:46px;border:1px dashed #c7cdd6;border-radius:8px;padding:9px 11px;font-size:14px;background:#fffef7}
+  .note:focus{outline:none;border-color:var(--fc);background:#fff}
+  .note:empty:before{content:attr(data-ph);color:#9aa3b2}
+
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:20px}
+
+  /* ---- file tree (structure at a glance) ---- */
+  .tree-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;margin:16px 0 26px}
+  .tree-wrap h3{margin:0 0 4px;font-size:16px}
+  .tree-wrap .hint{margin:0 0 10px;color:var(--muted);font-size:13px}
+  pre.tree{background:#0f172a;color:#cbd5e1;border-radius:8px;padding:14px 16px;overflow:auto;margin:0;
+        font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:12.5px;line-height:1.65}
+  pre.tree a.tf{font-weight:700;text-decoration:none;border-bottom:1px dashed currentColor}
+  pre.tree a.tf:hover{background:rgba(255,255,255,.10)}
+  pre.tree strong.tb{color:#fff;font-weight:700}
+  pre.tree .tree-cm{color:#64748b}
+
+  @media (max-width:820px){
+    aside{display:none}
+    .iogrid{grid-template-columns:1fr}
+  }
+  @media print{
+    aside,.topbar .controls{display:none}
+    .card{break-inside:avoid;box-shadow:none}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>@@TITLE@@</h1>
+    <p class="meta">@@META@@</p>
+    <a href="#overview"><b>&#9776; Big picture</b></a>
+    <a href="#tree"><b>&#128193; File tree</b></a>
+    @@SIDEBAR@@
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <h2>@@TITLE@@</h2>
+      <p>@@SUBTITLE@@</p>
+      <div class="controls">
+        <button id="toggleNav" title="Show or hide the left sidebar">&#9776; Sidebar</button>
+        <input id="filter" type="search" placeholder="Filter scripts (type a framework, topic, or file name)…">
+        <button id="expandAll">Expand all details &amp; code</button>
+        <button id="collapseAll">Collapse all</button>
+      </div>
+    </div>
+
+    <div class="legend">
+      <h3>How to read every diagram</h3>
+      <div class="row">
+        <span class="chip"><span class="swatch io"></span> Input / Output (to you)</span>
+        <span class="chip"><span class="swatch process"></span> A step that does work</span>
+        <span class="chip"><span class="swatch decision"></span> A decision / branch</span>
+        <span class="chip"><span class="swatch data"></span> A piece of data</span>
+      </div>
+      <div class="row" style="margin-top:8px;color:var(--muted);font-size:12.5px">
+        <span>Arrows show the order things run. A labelled arrow (e.g. <b>yes</b> / <b>no</b>) shows which branch is taken.</span>
+      </div>
+    </div>
+
+    <div class="overview" id="overview">
+      <h3>The big picture &mdash; how the frameworks connect</h3>
+      <p class="hint">Read top &rarr; bottom as a learning ladder. Dotted arrows show what each stage adds over the last.</p>
+      <div class="mermaid">@@OVERVIEW@@</div>
+    </div>
+
+    @@TREE@@
+
+    @@CARDS@@
+
+    <footer>Built with the <code>script-to-diagram</code> skill &middot; diagrams render via Mermaid.js &middot; your notes are saved in this browser only.</footer>
+  </main>
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+    themeVariables: { fontSize: '14px', fontFamily: 'Segoe UI, Helvetica, Arial, sans-serif' }
+  });
+</script>
+<script>
+  // --- editable notes that persist per-card in this browser (localStorage) ---
+  document.querySelectorAll('.note').forEach(function (n) {
+    var k = 'cmap:' + n.dataset.key;
+    var saved = localStorage.getItem(k);
+    if (saved !== null) n.innerHTML = saved;
+    n.addEventListener('input', function () { localStorage.setItem(k, n.innerHTML); });
+  });
+  // --- live filter: hide cards that don't match ---
+  var f = document.getElementById('filter');
+  f.addEventListener('input', function () {
+    var q = f.value.trim().toLowerCase();
+    document.querySelectorAll('.card').forEach(function (c) {
+      c.style.display = (!q || c.dataset.search.indexOf(q) > -1) ? '' : 'none';
+    });
+  });
+  // --- expand / collapse every "Step details" AND "Show the actual code" panel ---
+  document.getElementById('expandAll').onclick = function () {
+    document.querySelectorAll('details.stepbox, details.codebox').forEach(function (d) { d.open = true; });
+  };
+  document.getElementById('collapseAll').onclick = function () {
+    document.querySelectorAll('details.stepbox, details.codebox').forEach(function (d) { d.open = false; });
+  };
+  // --- collapse / expand the sidebar; the choice is remembered in this browser ---
+  var NAVK = 'cmap:nav-hidden';
+  if (localStorage.getItem(NAVK) === '1') document.body.classList.add('nav-hidden');
+  document.getElementById('toggleNav').onclick = function () {
+    var hidden = document.body.classList.toggle('nav-hidden');
+    localStorage.setItem(NAVK, hidden ? '1' : '0');
+  };
+  // --- fullscreen a code block on its ⛶ button (native Fullscreen API; Esc exits) ---
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.fs-btn');
+    if (!btn) return;
+    var pre = btn.parentElement.querySelector('pre.codeblock');
+    if (pre && pre.requestFullscreen) pre.requestFullscreen();
+  });
+</script>
+<!-- Prism.js: core + Python grammar. Classic scripts run in order before DOMContentLoaded,
+     so the Python rules are registered before Prism auto-highlights every language-* block. -->
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+<script>
+  // explicit highlight once the Python grammar is registered (idempotent with Prism's auto-run)
+  if (window.Prism) { Prism.highlightAll(); }
+</script>
+</body>
+</html>

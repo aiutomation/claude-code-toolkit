@@ -8,6 +8,12 @@
   },
   "plugins": [
     {
+      "name": "visual-plan",
+      "description": "See every plan before you approve it. Renders Claude Code plans as an interactive page: file tree, per-file what/why/how cards, flowchart, and old-vs-new UI previews. Offline, no dependencies.",
+      "source": "./plugins/visual-plan",
+      "category": "productivity"
+    },
+    {
       "name": "challenger",
       "description": "A skeptical staff-engineer session mode that pushes back on your decisions AND the existing code — but only when warranted. Levels: lite, full, ultra.",
       "source": "./plugins/challenger",

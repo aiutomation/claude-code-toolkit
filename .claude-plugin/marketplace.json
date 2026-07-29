@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-code-toolkit",
-  "description": "Session modes and self-improvement loops for Claude Code, pulled from a daily-driver config.",
+  "description": "Umbrella marketplace. Each plugin lives in its own repo; this just points at them.",
   "owner": {
     "name": "aiutomation",
     "url": "https://github.com/aiutomation"
@@ -9,20 +9,29 @@
   "plugins": [
     {
       "name": "visual-plan",
-      "description": "See every plan before you approve it. Renders Claude Code plans as an interactive page: file tree, per-file what/why/how cards, flowchart, and old-vs-new UI previews. Offline, no dependencies.",
-      "source": "./plugins/visual-plan",
+      "description": "Renders every plan as an interactive page before the approval dialog: file tree, per-file what/why/how cards, flowchart, and old-vs-new UI previews. Offline, no dependencies.",
+      "source": {
+        "source": "github",
+        "repo": "aiutomation/claude-visual-plan"
+      },
       "category": "productivity"
     },
     {
       "name": "challenger",
-      "description": "A skeptical staff-engineer session mode that pushes back on your decisions AND the existing code — but only when warranted. Levels: lite, full, ultra.",
-      "source": "./plugins/challenger",
+      "description": "Conservative-skeptic session mode. Challenges your decisions and the existing code when warranted, stays silent when the code is fine. Persists across /clear and restarts. Levels: lite, full, ultra.",
+      "source": {
+        "source": "github",
+        "repo": "aiutomation/claude-challenger"
+      },
       "category": "productivity"
     },
     {
       "name": "apply-improvements",
-      "description": "Capture-now/review-next self-improvement loop: a SessionEnd hook queues what happened, a skill later audits it and applies only the config edits you approve.",
-      "source": "./plugins/apply-improvements",
+      "description": "Capture-now/review-next self-improvement loop. A SessionEnd hook queues what happened with zero judgement; a skill later audits it across five config surfaces and applies only the edits you approve.",
+      "source": {
+        "source": "github",
+        "repo": "aiutomation/claude-apply-improvements"
+      },
       "category": "productivity"
     }
   ]
